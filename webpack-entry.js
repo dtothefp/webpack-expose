@@ -10,6 +10,7 @@ if (isDev) {
   const app = new Express();
   const serverOptions = {
     contentBase: './dist',
+    publicPath: '/',
     quiet: true,
     noInfo: true,
     hot: true,
