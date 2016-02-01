@@ -164,8 +164,10 @@ const loaders = [
 
 const entry = {
   main: [
-    './js/index.js',
-    path.join(process.cwd(), 'src', 'js', 'shims.js')
+    'js-cookie',
+    'query-string',
+    //path.join(process.cwd(), 'src', 'js', 'shims.js'),
+    './js/index.js'
   ]
 };
 
