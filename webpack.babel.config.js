@@ -1,4 +1,6 @@
 import path from 'path';
+import fs from 'fs';
+import {dependencies as deps} from './package.json';
 import webpack from 'webpack';
 import nunjucks from 'nunjucks';
 import makeEslintConfig from 'open-eslint-config';
@@ -8,7 +10,7 @@ import formatter from 'eslint-friendly-formatter';
 
 const isDev = process.argv.indexOf('watch') !== -1;
 const babelrc = `{
-  "presets": ["react", "es2015", "stage-0"],
+  "presets": ["react", "es2015-webpack", "stage-0"],
   "env": {
     "development": {
       "plugins": [
@@ -83,6 +85,9 @@ const hotEntry = [
 
 babelQuery.plugins = babelPlugins;
 
+const buildDir = 'dist';
+const addbase = (...args) => path.join.apply(path, [__dirname, ...args]);
+
 const plugins = [
   new webpack.optimize.OccurrenceOrderPlugin(),
   new webpack.NoErrorsPlugin(),
@@ -93,15 +98,21 @@ const plugins = [
   }),
   new ExtractTextPlugin(path.join('css', '[name].css'), {
     allChunks: true
-  })
+  }),
+  function() {
+    this.plugin('done', (stats) => {
+      fs.writeFileSync(
+        addbase(buildDir, `${deps.webpack.replace('^', '')}-analysis-stats.json`),
+        JSON.stringify(stats.toJson())
+      );
+    });
+  }
 ];
 
 if (isDev) {
   plugins.push(new webpack.HotModuleReplacementPlugin());
 }
 
-const addbase = (dir) => path.join(__dirname, dir);
-const buildDir = 'dist';
 const exposeMods = {
   'js-cookie': 'Cookie',
   'query-string': 'qs'
@@ -206,7 +217,7 @@ export default {
     filename: path.join('js', '[name].js')
   },
   module: {
-    preLoaders,
+    //preLoaders,
     loaders,
     postLoaders: [
       ...expose
