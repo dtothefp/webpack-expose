@@ -10,7 +10,7 @@ import formatter from 'eslint-friendly-formatter';
 
 const isDev = process.argv.indexOf('watch') !== -1;
 const babelrc = `{
-  "presets": ["react", "es2015-webpack", "stage-0"],
+  "presets": ["react", "es2015", "stage-0"],
   "env": {
     "development": {
       "plugins": [
@@ -87,10 +87,10 @@ babelQuery.plugins = babelPlugins;
 
 const buildDir = 'dist';
 const addbase = (...args) => path.join.apply(path, [__dirname, ...args]);
-const {DedupePlugin, UglifyJsPlugin, OccurrenceOrderPlugin} = webpack.optimize;
+const {DedupePlugin, UglifyJsPlugin, OccurenceOrderPlugin} = webpack.optimize;
 
 const plugins = [
-  new OccurrenceOrderPlugin(),
+  new OccurenceOrderPlugin(),
   new webpack.NoErrorsPlugin(),
   new webpack.DefinePlugin({
     'process.env': {

@@ -55,7 +55,7 @@
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
     "template-html-loader": "0.0.3",
-    "webpack": "^2.0.7-beta",
+    "webpack": "^1.12.12",
     "webpack-dev-middleware": "^1.2.0",
     "webpack-hot-middleware": "^2.5.0",
     "webpack-isomorphic-tools": "^2.2.26"
