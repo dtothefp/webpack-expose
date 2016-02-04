@@ -1,6 +1,7 @@
 /*eslint-disable*/
 import '../index.html';
 import 'babel-polyfill';
+import Joi from 'joi';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';

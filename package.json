@@ -39,6 +39,7 @@
     "file-loader": "^0.8.5",
     "foundation": "^4.2.1-1",
     "foundation-sites": "^6.1.2",
+    "joi": "^6.10.1",
     "js-cookie": "^2.0.3",
     "karma": "^0.13.19",
     "karma-webpack": "^1.7.0",
