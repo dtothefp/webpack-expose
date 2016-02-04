@@ -87,9 +87,10 @@ babelQuery.plugins = babelPlugins;
 
 const buildDir = 'dist';
 const addbase = (...args) => path.join.apply(path, [__dirname, ...args]);
+const {DedupePlugin, UglifyJsPlugin, OccurrenceOrderPlugin} = webpack.optimize;
 
 const plugins = [
-  new webpack.optimize.OccurrenceOrderPlugin(),
+  new OccurrenceOrderPlugin(),
   new webpack.NoErrorsPlugin(),
   new webpack.DefinePlugin({
     'process.env': {
@@ -108,10 +109,6 @@ const plugins = [
     });
   }
 ];
-
-if (isDev) {
-  plugins.push(new webpack.HotModuleReplacementPlugin());
-}
 
 const exposeMods = {
   'js-cookie': 'Cookie',
@@ -174,12 +171,7 @@ const loaders = [
 ];
 
 const entry = {
-  main: [
-    'js-cookie',
-    'query-string',
-    //path.join(process.cwd(), 'src', 'js', 'shims.js'),
-    './js/index.js'
-  ]
+  main: ['./js/index.js']
 };
 
 const apConfig = {
@@ -196,16 +188,29 @@ const apConfig = {
 
 entry.main.unshift(...Object.keys(exposeMods));
 
-//TODO: Uncaught Error: [HMR] Hot Module Replacement is disabled.
 if (isDev) {
   entry.main.unshift(...hotEntry);
-  plugins.push(
+
+  plugins.push(...[
+    new webpack.HotModuleReplacementPlugin(),
     function() {
       this.plugin('done', (stats) => {
         console.log(stats.toString());
       });
     }
-  );
+  ]);
+} else {
+  plugins.push(...[
+    new UglifyJsPlugin({
+      output: {
+        comments: false
+      },
+      compress: {
+        warnings: false
+      }
+    }),
+    new DedupePlugin()
+  ]);
 }
 
 export default {
@@ -217,11 +222,16 @@ export default {
     filename: path.join('js', '[name].js')
   },
   module: {
-    //preLoaders,
+    preLoaders,
     loaders,
     postLoaders: [
       ...expose
     ]
+  },
+  node: {
+    dns: 'mock',
+    net: 'mock',
+    fs: 'empty'
   },
   plugins,
   eslint: {
